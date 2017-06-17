@@ -19,13 +19,13 @@ def color_thresh(img, rgb_thresh=(160, 160, 160)):
 
 def sample_thresh(img):
     color_select = np.zeros_like(img[:,:,0])
-    above_thresh = (img[:,:,0] > 130) \
+    within_thresh = (img[:,:,0] > 130) \
                 & (img[:,:,0] < 205) \
                 & (img[:,:,1] > 100) \
                 & (img[:,:,1] < 180) \
                 & (img[:,:,2] < 60)
 
-    color_select[above_thresh] = 1
+    color_select[within_thresh] = 1
     return color_select
 
 def obstacle_thresh(img):
@@ -120,9 +120,9 @@ def perception_step(Rover):
     obstacle_threshed = obstacle_thresh(warped)
 
     # 4) Update Rover.vision_image (this will be displayed on left side of screen)
-    Rover.vision_image[:,:,0] = obstacle_threshed
-    Rover.vision_image[:,:,1] = sample_threshed
-    Rover.vision_image[:,:,2] = threshed
+    Rover.vision_image[:,:,0] = obstacle_threshed * 255
+    Rover.vision_image[:,:,1] = sample_threshed * 255
+    Rover.vision_image[:,:,2] = threshed * 255
 
     # 5) Convert map image pixel values to rover-centric coords
     xpix, ypix = rover_coords(threshed)
