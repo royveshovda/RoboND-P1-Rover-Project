@@ -24,6 +24,7 @@
 [image1]: ./misc/rover_image.jpg
 [image2]: ./calibration_images/example_grid1.jpg
 [image3]: ./calibration_images/example_rock1.jpg
+[image4]: ./rover_decicion_tree.png
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/916/view) Points
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -46,17 +47,31 @@ And another!
 
 ![alt text][image2]
 ### Autonomous Navigation and Mapping
-As a general comment I can add that I ran the simulator at resolution 1440x900 with detail level 'Good'.
 
 #### 1. Fill in the `perception_step()` (at the bottom of the `perception.py` script) and `decision_step()` (in `decision.py`) functions in the autonomous mapping scripts and an explanation is provided in the writeup of how and why these functions were modified as they were.
 
+##### Perception
+I used the code from the notebook as a starting point, and filled in code for the suggested steps to provide perception for the Rover.
+1. Define source and destination points for perspective transform
+2. Apply perspective transform
+3. Apply color threshold to identify navigable terrain/obstacles/rock samples
+4. Update Rover.vision_image (this will be displayed on left side of screen)
+5. Convert map image pixel values to rover-centric coords
+6. Convert rover-centric pixel values to world coordinates
+7. Update Rover worldmap (to be displayed on right side of screen)
+8. Convert rover-centric pixel positions to polar coordinates
+
+##### Decision
+The implementer decicion tree looks like this:
+![alt text][image4]
 
 #### 2. Launching in autonomous mode your rover can navigate and map autonomously.  Explain your results and how you might improve them in your writeup.  
 
 **Note: running the simulator with different choices of resolution and graphics quality may produce different results, particularly on different machines!  Make a note of your simulator settings (resolution and graphics quality set on launch) and frames per second (FPS output to terminal by `drive_rover.py`) in your writeup when you submit the project so your reviewer can reproduce your results.**
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+I ran the simulator at resolution 1440x900 with detail level 'Good'.
 
+In autonomous drive I normally get around 20 FPS.
+Most of the time the Rover can drive the whole map without any issues, but it sometimes get stuck in the big open area driving in circles. It is also very bad at picking up the samples. I think the stop procedure is the main reason for this.
 
-
-![alt text][image3]
+The Rover could benefit from favouring unexplored areas of the map instead of the current random drive.

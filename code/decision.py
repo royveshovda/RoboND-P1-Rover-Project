@@ -15,23 +15,19 @@ def decision_step(Rover):
                  (np.mean(Rover.nav_dists > 20)):
                 # If Forward and navigable terrain, then throttle
                 if (Rover.vel < Rover.max_vel) and (Rover.steer < 5):
-                    # Set throttle
                     Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
                     Rover.throttle = Rover.throttle_set
                 else: # Reduce throttle
                     Rover.throttle = 0
                 Rover.brake = 0
-                # Set steering
                 Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
             # If not navigable terrain pixels then stop
             elif (len(Rover.nav_angles) < Rover.stop_forward) or \
                  (np.mean(Rover.nav_dists < 20)):
-                # Set stop and brakes
                 Rover.throttle = 0
                 Rover.brake = Rover.brake_set
                 Rover.steer = 0
                 Rover.mode = 'stop'
-
 
         # # Mode=stop?
         elif Rover.mode == 'stop':
@@ -55,27 +51,26 @@ def decision_step(Rover):
                     Rover.mode = 'forward'
         # If sample detected
         elif Rover.mode == 'goto_rock':
-            # if the rover can pick up sample, stop and pick it up
-            if Rover.near_sample:
-                Rover.throttle = 0
-                Rover.brake = Rover.brake_set
-            # Still moving, start to brake
-            elif Rover.vel > np.mean(Rover.nav_dists):
-                Rover.throttle = 0
-                Rover.brake = Rover.brake_set/2
-            # Still too far away, keep going
-            elif Rover.vel < Rover.max_vel/2:
-                Rover.throttle = Rover.throttle_set/2
-                Rover.brake = 0
-            # Too fast, brake
-            elif Rover.vel > Rover.max_vel/2:
-                Rover.throttle = 0
-                Rover.brake = Rover.throttle_set/3
-
-            Rover.steer = np.clip(np.mean(Rover.nav_angles * 180/np.pi), -15, 15)
             # if sample picked up, exit mode
             if Rover.picking_up:
                 Rover.mode = 'stop'
+            else:
+                # if the rover can pick up sample, stop and pick it up
+                if Rover.near_sample:
+                    Rover.throttle = 0
+                    Rover.brake = Rover.brake_set
+                # Still moving, start to brake
+                elif Rover.vel > np.mean(Rover.nav_dists):
+                    Rover.throttle = 0
+                    Rover.brake = Rover.brake_set/2
+                # Still too far away, keep going
+                elif Rover.vel < Rover.max_vel/2:
+                    Rover.throttle = Rover.throttle_set/2
+                    Rover.brake = 0
+                # Too fast, brake
+                elif Rover.vel > Rover.max_vel/2:
+                    Rover.throttle = 0
+                    Rover.brake = Rover.throttle_set/3
 
     # Just to make the rover do something
     # even if no modifications have been made to the code
