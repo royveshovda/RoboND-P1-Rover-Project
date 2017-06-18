@@ -25,6 +25,8 @@
 [image2]: ./calibration_images/example_grid1.jpg
 [image3]: ./calibration_images/example_rock1.jpg
 [image4]: ./rover_decicion_tree.png
+[image5]: ./processed_images.png
+[image6]: ./processed_video_sample.png
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/916/view) Points
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -40,12 +42,29 @@ You're reading it!
 #### 1. Run the functions provided in the notebook on test images (first with the test data provided, next on data you have recorded). Add/modify functions to allow for color selection of obstacles and rock samples.
 Here is an example of how to include an image in your writeup.
 
-![alt text][image1]
+The main functions required to solve this section was a threshold function and a warp function. For the obstacle part, it was enough to run a single threshold function with a threshold set to 160 for all three color channels. Reverse of this solved the drivable area problem as well. For the rock samples the thresholds was a bit more sophisticated with both an upper bound and a lower bound. The thresholds for rock samples look like this:
+* 130 < Red < 205
+* 100 < Green < 180
+* 0 < Blue < 60
+
+##### Samples of processed images
+![alt text][image5]
 
 #### 2. Populate the `process_image()` function with the appropriate analysis steps to map pixels identifying navigable terrain, obstacles and rock samples into a worldmap.  Run `process_image()` on your test data using the `moviepy` functions provided to create video output of your result.
-And another!
 
-![alt text][image2]
+I populated the steps below the TODO section to process each image and generate a movie in the end. The steps to be populated was:
+* Define source and destination points for perspective transform
+* Apply perspective transform
+* Apply color threshold to identify navigable
+* warped image to world coordinates
+* Update worldmap (to be displayed on right side of screen)
+* Make a mosaic image, below is some example code
+
+The video from the processing steps can be found here: [output/test_mapping.mp4](./output/test_mapping.mp4)
+
+##### Snapshot from the finalmovie
+![alt text][image6]
+
 ### Autonomous Navigation and Mapping
 
 #### 1. Fill in the `perception_step()` (at the bottom of the `perception.py` script) and `decision_step()` (in `decision.py`) functions in the autonomous mapping scripts and an explanation is provided in the writeup of how and why these functions were modified as they were.
